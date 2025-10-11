@@ -1,0 +1,4 @@
+# Place your data files here:
+# - rtm_prices.csv (real-time 5-minute price data)
+# - dam_prices.csv (day-ahead hourly forecast data)
+# - weather_data.csv (optional weather data)

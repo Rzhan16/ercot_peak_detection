@@ -1,0 +1,87 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+*.log
+
+# Virtual Environments
+venv/
+ENV/
+env/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Data files (too large for git)
+data/*.csv
+data/*.xlsx
+data/*.xls
+
+# Keep directory structure
+!data/.gitkeep
+!results/.gitkeep
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+*.ipynb
+
+# Mac
+.DS_Store
+
+# Results (generated files)
+results/*.png
+results/*.csv
+results/*.txt
+results/*.json
+
+# PRIVATE DOCUMENTS - DO NOT COMMIT
+INTERNSHIP_REPORT.md
+FOR_INTERNSHIP_INTERVIEW.md
+IMPROVEMENTS_SUMMARY.md
+IMPLEMENTATION_GUIDE.md
+IMPLEMENTATION_GUIDE_PART2.md
+IMPLEMENTATION_GUIDE_WEEK2.md
+QUICK_START.md
+PROJECT_SETUP_COMPLETE.md
+START_HERE.md
+PROGRESS.md
+STATUS.txt
+AI_RESUME_HERE.md
+VERIFICATION_COMPLETE.md
+PROJECT_COMPLETE.md
+AI_SESSION_SUMMARY.md
+FINAL_REPORT.md
+
+# Cursor AI files
+.cursorrules
+.cursor/
+
+# GitHub setup scripts (keep local only)
+PUSH_TO_GITHUB.sh
+GITHUB_INSTRUCTIONS.md
+
+# Environment files
+.env
+.env.local
