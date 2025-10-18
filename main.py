@@ -47,7 +47,7 @@ For detailed implementation guide, see IMPLEMENTATION_GUIDE.md
     
     parser.add_argument(
         '--mode',
-        choices=['full', 'eda', 'backtest', 'optimize', 'report', 'week1'],
+        choices=['full', 'eda', 'backtest', 'optimize', 'report', 'week1', 'enhanced'],
         default='full',
         help='Execution mode (default: full)'
     )
@@ -104,6 +104,9 @@ For detailed implementation guide, see IMPLEMENTATION_GUIDE.md
         
         if args.mode in ['full', 'report']:
             generate_reports()
+        
+        if args.mode == 'enhanced':
+            run_enhanced_backtest(args.rtm_data, args.dam_data, args.quick)
         
         print("\n" + "="*70)
         print("✅ EXECUTION COMPLETED SUCCESSFULLY")
@@ -252,7 +255,128 @@ def generate_reports():
     logger.info("  • results/plots/backtest_summary_*.png")
     
     logger.info("\n✅ All reports are ready - Check project root and results/")
+
+
+def run_enhanced_backtest(rtm_path, dam_path, quick=False):
+    """Run enhanced strategies with regime classification and dynamic thresholds."""
+    print_header("ENHANCED STRATEGIES: REGIME CLASSIFICATION & DYNAMIC THRESHOLDS")
     
+    from src.data_loader import ERCOTDataLoader
+    from src.strategies import PriceDropStrategy, VelocityReversalStrategy, EnsembleStrategy
+    from src.regime_adaptive_strategy import RegimeAdaptiveStrategy, DynamicThresholdStrategy
+    from src.backtester import Backtester
+    import json
+    
+    logger.info("Loading data...")
+    loader = ERCOTDataLoader()
+    rtm_df = loader.load_rtm_data(rtm_path)
+    peaks_df = loader.get_daily_peaks(rtm_df)
+    
+    if quick:
+        logger.info("Quick mode: Using first 60 days")
+        first_date = rtm_df['timestamp'].min().date()
+        cutoff_date = first_date + pd.Timedelta(days=60)
+        rtm_df = rtm_df[rtm_df['timestamp'].dt.date < cutoff_date]
+        peaks_df = peaks_df[peaks_df['date'] < cutoff_date]
+    
+    logger.info(f"Testing on {len(peaks_df)} days...")
+    logger.info("")
+    
+    # Define strategies
+    strategies = {
+        'Baseline: PriceDrop': PriceDropStrategy(
+            lookback_minutes=10,
+            drop_threshold=0.035,
+            min_price_multiplier=1.25,
+            longterm_minutes=120
+        ),
+        'Baseline: VelocityReversal': VelocityReversalStrategy(
+            velocity_window_minutes=15,
+            acceleration_threshold=-1.0,
+            price_percentile=80,
+            lookback_minutes=60
+        ),
+        'Baseline: Ensemble': EnsembleStrategy([
+            PriceDropStrategy(lookback_minutes=10, drop_threshold=0.035, 
+                            min_price_multiplier=1.25, longterm_minutes=120),
+            VelocityReversalStrategy(velocity_window_minutes=15, 
+                                   acceleration_threshold=-1.0,
+                                   price_percentile=80, lookback_minutes=60)
+        ], min_votes=2),
+        'NEW: RegimeAdaptive': RegimeAdaptiveStrategy(),
+        'NEW: DynamicThreshold': DynamicThresholdStrategy(),
+        'NEW: Enhanced Ensemble': EnsembleStrategy([
+            RegimeAdaptiveStrategy(),
+            DynamicThresholdStrategy(),
+            PriceDropStrategy(lookback_minutes=10, drop_threshold=0.035)
+        ], min_votes=2)
+    }
+    
+    # Run backtests
+    results = {}
+    for name, strategy in strategies.items():
+        logger.info(f"Testing: {name}")
+        try:
+            backtester = Backtester(strategy, peaks_df)
+            result = backtester.run_backtest(rtm_df, verbose=False)
+            results[name] = result
+            
+            logger.info(f"  Success: {result['success_rate']:.1%}")
+            logger.info(f"  Precision: {result['precision']:.1%}")
+            logger.info(f"  Signals/Day: {result['signals_per_day']:.1f}")
+            logger.info(f"  ✓ Complete")
+        except Exception as e:
+            logger.error(f"  ✗ Error: {e}")
+            results[name] = None
+        logger.info("")
+    
+    # Print comparison table
+    logger.info("="*70)
+    logger.info("RESULTS COMPARISON")
+    logger.info("="*70)
+    print()
+    print(f"{'Strategy':<30} {'Success':>10} {'Precision':>10} {'Sig/Day':>10}")
+    print("-"*70)
+    
+    for name, result in results.items():
+        if result:
+            print(f"{name:<30} {result['success_rate']:>9.1%} {result['precision']:>9.1%} {result['signals_per_day']:>9.1f}")
+    
+    print()
+    
+    # Calculate improvements
+    if results.get('Baseline: Ensemble') and results.get('NEW: Enhanced Ensemble'):
+        baseline = results['Baseline: Ensemble']
+        enhanced = results['NEW: Enhanced Ensemble']
+        
+        success_imp = ((enhanced['success_rate'] - baseline['success_rate']) / baseline['success_rate'] * 100)
+        precision_imp = ((enhanced['precision'] - baseline['precision']) / baseline['precision'] * 100)
+        
+        logger.info("="*70)
+        logger.info("IMPROVEMENTS")
+        logger.info("="*70)
+        logger.info(f"Success Rate:  {success_imp:+.1f}% improvement")
+        logger.info(f"Precision:     {precision_imp:+.1f}% improvement")
+        logger.info("")
+    
+    # Save results
+    logger.info("Saving results...")
+    results_serializable = {}
+    for name, result in results.items():
+        if result:
+            results_serializable[name] = {
+                'success_rate': result['success_rate'],
+                'precision': result['precision'],
+                'signals_per_day': result['signals_per_day'],
+                'avg_delay_minutes': result['avg_delay_minutes']
+            }
+    
+    with open('results/enhanced_strategies_results.json', 'w') as f:
+        json.dump(results_serializable, f, indent=2)
+    
+    logger.info("✅ Enhanced backtest complete")
+    logger.info("   Results saved: results/enhanced_strategies_results.json")
+
 
 if __name__ == "__main__":
     main()
