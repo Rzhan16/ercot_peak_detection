@@ -109,16 +109,16 @@ For detailed implementation guide, see IMPLEMENTATION_GUIDE.md
             run_enhanced_backtest(args.rtm_data, args.dam_data, args.quick)
         
         print("\n" + "="*70)
-        print("✅ EXECUTION COMPLETED SUCCESSFULLY")
+        print(" EXECUTION COMPLETED SUCCESSFULLY")
         print(f"End Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         print("="*70)
         
     except KeyboardInterrupt:
-        print("\n\n⚠️  Execution interrupted by user")
+        print("\n\n  Execution interrupted by user")
         sys.exit(130)
     except Exception as e:
         print("\n" + "="*70)
-        print("❌ EXECUTION FAILED")
+        print(" EXECUTION FAILED")
         print(f"Error: {str(e)}")
         print("="*70)
         import traceback
@@ -240,7 +240,7 @@ def run_optimization(rtm_path, quick=False):
     
     results = optimize_all_strategies()
     
-    logger.info("✅ Optimization Complete")
+    logger.info(" Optimization Complete")
 
 
 def generate_reports():
@@ -254,7 +254,7 @@ def generate_reports():
     logger.info("  • results/plots/strategy_comparison.png")
     logger.info("  • results/plots/backtest_summary_*.png")
     
-    logger.info("\n✅ All reports are ready - Check project root and results/")
+    logger.info("\n All reports are ready - Check project root and results/")
 
 
 def run_enhanced_backtest(rtm_path, dam_path, quick=False):
@@ -374,7 +374,7 @@ def run_enhanced_backtest(rtm_path, dam_path, quick=False):
     with open('results/enhanced_strategies_results.json', 'w') as f:
         json.dump(results_serializable, f, indent=2)
     
-    logger.info("✅ Enhanced backtest complete")
+    logger.info(" Enhanced backtest complete")
     logger.info("   Results saved: results/enhanced_strategies_results.json")
 
 
