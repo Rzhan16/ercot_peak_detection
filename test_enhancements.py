@@ -118,7 +118,7 @@ def test_phase1_differential_features():
     plt.savefig('results/plots/phase1_differential_features.png', dpi=300, bbox_inches='tight')
     print(f"   ✓ Saved: results/plots/phase1_differential_features.png")
     
-    print("\n✅ PHASE 1 COMPLETE: Differential features working correctly!")
+    print("\nPHASE 1 COMPLETE: Differential features working correctly!")
     print("   - No lookahead bias detected")
     print("   - Features calculated properly")
     print("   - Visualization saved")
@@ -203,7 +203,7 @@ def test_phase2_regime_classification(test_df):
     plt.savefig('results/plots/phase2_regime_classification.png', dpi=300, bbox_inches='tight')
     print(f"   ✓ Saved: results/plots/phase2_regime_classification.png")
     
-    print("\n✅ PHASE 2 COMPLETE: Regime classification working!")
+    print("\n PHASE 2 COMPLETE: Regime classification working!")
     
     return test_df, classifier
 
@@ -267,7 +267,7 @@ def test_lookahead_bias_comprehensive():
     print("   ✓ Each timestamp only used data up to that point")
     print("   ✓ No future information leaked into features")
     
-    print("\n✅ COMPREHENSIVE LOOKAHEAD TEST PASSED!")
+    print("\n COMPREHENSIVE LOOKAHEAD TEST PASSED!")
     print("   All features are calculated using only past data")
 
 
@@ -291,7 +291,7 @@ if __name__ == "__main__":
     test_lookahead_bias_comprehensive()
     
     print("\n" + "=" * 80)
-    print("ALL TESTS PASSED! ✅")
+    print("ALL TESTS PASSED! ")
     print("=" * 80)
     print("\nNext steps:")
     print("  1. Review visualizations in results/plots/")
