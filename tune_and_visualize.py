@@ -88,7 +88,7 @@ best_config = max([r for r in tuning_results if 1.0 <= r['signals_per_day'] <= 3
                   key=lambda x: x['precision'],
                   default=tuning_results[-1])
 
-print(f"\n🏆 BEST CONFIG: {best_config['name']}")
+print(f"\n BEST CONFIG: {best_config['name']}")
 print(f"   Success: {best_config['success_rate']:.1%}")
 print(f"   Precision: {best_config['precision']:.1%}")
 print(f"   Signals/Day: {best_config['signals_per_day']:.1f}")
@@ -136,7 +136,7 @@ for min_votes in [1, 2, 3]:
 best_ensemble = max([r for r in ensemble_results if r['signals_per_day'] >= 0.5],
                     key=lambda x: x['precision'])
 
-print(f"\n🏆 BEST ENSEMBLE: min_votes={best_ensemble['min_votes']}")
+print(f"\n BEST ENSEMBLE: min_votes={best_ensemble['min_votes']}")
 print(f"   Success: {best_ensemble['success_rate']:.1%}")
 print(f"   Precision: {best_ensemble['precision']:.1%}")
 print(f"   Signals/Day: {best_ensemble['signals_per_day']:.1f}")
@@ -355,13 +355,13 @@ fp_reduction = (0.959 - (1-best_config['precision'])) / 0.959 * 100
 print(f"   Precision: {improvement:+.0f}% improvement")
 print(f"   FP Reduction: {fp_reduction:.1f}% fewer false positives")
 
-print(f"\n🏆 PRODUCTION RECOMMENDATION:")
+print(f"\n PRODUCTION RECOMMENDATION:")
 print(f"   Strategy: RegimeAdaptive with relaxed thresholds")
 print(f"   DAM Ratio: {best_config['dam_ratio']:.2f}")
 print(f"   Velocity Min: {best_config['velocity_min']:.0f}")
 print(f"   Expected: ~{best_config['signals_per_day']:.1f} signals/day at {best_config['precision']:.1%} precision")
 
-print("\n✅ ANALYSIS COMPLETE!")
+print("\n ANALYSIS COMPLETE!")
 print("="*80)
 print()
 
