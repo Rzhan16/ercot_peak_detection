@@ -17,7 +17,7 @@ logging.getLogger('src.feature_engineering').setLevel(logging.WARNING)
 print("\n" + "="*80)
 print(" "*20 + "ENHANCED PEAK DETECTION TEST")
 print("="*80)
-print("\n📊 Loading data...")
+print("\n Loading data...")
 loader = ERCOTDataLoader()
 rtm_df = loader.load_rtm_data('data/rtm_prices.csv')
 peaks_df = loader.get_daily_peaks(rtm_df)
@@ -87,7 +87,7 @@ for name, result in results.items():
 
 # Calculate improvements
 print("\n" + "="*80)
-print("🎉 KEY IMPROVEMENTS")
+print(" KEY IMPROVEMENTS")
 print("="*80)
 
 if results.get('Baseline: Ensemble') and results.get('NEW: Enhanced Ensemble'):
@@ -115,7 +115,7 @@ best = max([(n, r) for n, r in results.items() if r],
 print(f"\n🏆 Best Precision: {best[0]} ({best[1].get('precision', 0):.1%})")
 
 print("\n" + "="*80)
-print("✅ TEST COMPLETE!")
+print(" TEST COMPLETE!")
 print("="*80)
 print("\nKey Findings:")
 print("  • Enhanced strategies improve precision by 2-3x")
